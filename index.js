@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 
-
+// const uri = "mongodb://localhost:27017";
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.tqkankt.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -27,9 +27,20 @@ async function run() {
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
 
+        const artCollection = client.db('artDB').collection('art')
+
+
+        app.get('/art',async(req,res)=>{
+            const cursor = artCollection.find();
+            const result =await cursor.toArray();
+            res.send(result);
+        })
+
         app.post('/art',async(req,res)=>{
             const newArt = req.body;
-            console.log(newArt)
+            console.log(newArt);
+            const result =await artCollection.insertOne(newArt);
+            res.send(result)
         })
 
 
