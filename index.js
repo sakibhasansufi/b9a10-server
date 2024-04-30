@@ -22,6 +22,7 @@ const client = new MongoClient(uri, {
     }
 });
 
+
 async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
@@ -57,7 +58,8 @@ async function run() {
             const id =req.params.id;
             const filter = {_id: new ObjectId(id)};
             const options = {upsert : true};
-            const updatedArt = {
+            const updatedArt = req.body;
+            const art = {
                 $set:{
                     image:updatedArt.image,
                     item:updatedArt.item,
@@ -70,7 +72,12 @@ async function run() {
                     stock:updatedArt.stock
 
                 }
+
+                
             }
+
+            const result = await artCollection.updateOne(filter,art,options);
+            res.send(result);
         })
 
 
