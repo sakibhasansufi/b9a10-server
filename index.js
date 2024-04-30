@@ -36,11 +36,41 @@ async function run() {
             res.send(result);
         })
 
+
+        app.get('/art/:id',async(req,res)=>{
+            const id =req.params.id;
+            const query = {_id: new ObjectId(id)};
+            const result = await artCollection.findOne(query);
+            res.send(result);
+        })
+
         app.post('/art',async(req,res)=>{
             const newArt = req.body;
             console.log(newArt);
             const result =await artCollection.insertOne(newArt);
             res.send(result)
+        })
+
+
+
+        app.put('/art/:id',async(req,res)=>{
+            const id =req.params.id;
+            const filter = {_id: new ObjectId(id)};
+            const options = {upsert : true};
+            const updatedArt = {
+                $set:{
+                    image:updatedArt.image,
+                    item:updatedArt.item,
+                    subCategory:updatedArt.subCategory,
+                    description:updatedArt.description,
+                    price:updatedArt.price,
+                    rating:updatedArt.rating,
+                    customization:updatedArt.customization,
+                    process:updatedArt.process,
+                    stock:updatedArt.stock
+
+                }
+            }
         })
 
 
